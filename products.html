@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Products – Farm Direct Connect</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { font-family: 'Poppins', sans-serif; }
+body { background: linear-gradient(135deg, #e8f5e9, #a29bfe, #fd79a8); min-height: 100vh; }
+.product-card { 
+  border-radius: 16px; 
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+  transition: all 0.3s; 
+  overflow: hidden;
+}
+.product-card:hover { 
+  transform: translateY(-10px); 
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
+}
+.product-card img { height: 200px; object-fit: cover; width: 100%; }
+#my-products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+#google_translate_element { position: fixed; top: 10px; right: 10px; z-index: 1000; }
+.preview-img { max-height: 300px; object-fit: cover; border-radius: 12px; margin-top: 10px; }
+.modal-content { border-radius: 20px; }
+</style>
+</head>
+<body>
+
+<div id="google_translate_element"></div>
+
+<nav class="navbar navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-success" href="index.html">Farm Direct Connect</a>
+    <a class="btn btn-success" href="post-ad.html">+ Add Product</a>
+  </div>
+</nav>
+
+<main class="container my-5">
+  <h2 class="text-center fw-semibold text-primary mb-4">My Fresh Products</h2>
+  <section id="my-products" class="row"></section>
+</main>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Edit Product</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-form">
+          <input type="hidden" id="edit-global-index">
+          <input class="form-control mb-3" id="edit-name" placeholder="Product Name" required>
+          <div id="edit-image-preview" class="text-center mb-3"></div>
+
+          <select class="form-select mb-3" id="edit-category" required>
+            <option value="">Select Category</option>
+            <option>Vegetables</option>
+            <option>Fruits</option>
+            <option>Grains</option>
+          </select>
+
+          <input class="form-control mb-3" id="edit-price" placeholder="Price (e.g. ₹40 / kg)" required>
+          <textarea class="form-control mb-3" id="edit-description" rows="4" placeholder="Description" required></textarea>
+
+          <label class="form-label">Location (City/Town in Tamil Nadu)</label>
+          <input class="form-control mb-3" id="edit-location" placeholder="e.g. Chennai, Coimbatore" required>
+
+          <label class="form-label">Change Image (Optional)</label>
+          <input type="file" class="form-control mb-3" id="edit-image" accept="image/*">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="saveEdit()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+if (localStorage.getItem("role") !== "farmer") {
+  alert("Access denied. Please login as Farmer.");
+  window.location.href = "login.html";
+}
+
+const currentFarmer = localStorage.getItem('username'); // This is the logged-in farmer
+
+function loadProducts() {
+  const container = document.getElementById('my-products');
+  const allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
+
+  // FILTER: Only show products posted by the current logged-in farmer
+  const myProducts = allProducts.filter(product => product.farmerName === currentFarmer);
+
+  container.innerHTML = '';
+
+  if (myProducts.length === 0) {
+    container.innerHTML = `<div class="col-12 text-center py-5 text-muted">
+      <h5>No products added yet</h5>
+      <a href="post-ad.html" class="btn btn-success mt-3">Add Your First Product</a>
+    </div>`;
+    return;
+  }
+
+  myProducts.forEach((product) => {
+    const globalIndex = allProducts.indexOf(product); // Needed for edit/delete
+    const card = document.createElement('div');
+    card.className = 'col';
+    card.innerHTML = `
+      <div class="card product-card h-100">
+        <img src="${product.image || 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${product.name}">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">${product.name}</h5>
+          <p class="text-muted small">Category: ${product.category}</p>
+          <p class="fw-bold text-success">${product.price}</p>
+          <p class="small flex-grow-1">${product.description}</p>
+          <p class="small"><strong>Location:</strong> ${product.location}</p>
+          <div class="mt-auto d-flex gap-2">
+            <button class="btn btn-sm btn-outline-primary flex-fill" onclick="openEditModal(${globalIndex})">Edit</button>
+            <button class="btn btn-sm btn-outline-danger flex-fill" onclick="deleteProduct(${globalIndex})">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function deleteProduct(globalIndex) {
+  if (!confirm("Delete this product permanently?")) return;
+  let allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
+  allProducts.splice(globalIndex, 1);
+  localStorage.setItem('allProducts', JSON.stringify(allProducts));
+  loadProducts();
+}
+
+function openEditModal(globalIndex) {
+  const allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
+  const product = allProducts[globalIndex];
+
+  document.getElementById('edit-global-index').value = globalIndex;
+  document.getElementById('edit-name').value = product.name;
+  document.getElementById('edit-category').value = product.category;
+  document.getElementById('edit-price').value = product.price;
+  document.getElementById('edit-description').value = product.description;
+  document.getElementById('edit-location').value = product.location;
+
+  const preview = document.getElementById('edit-image-preview');
+  preview.innerHTML = `<img src="${product.image}" class="preview-img shadow" alt="Current">`;
+  preview.dataset.currentImage = product.image;
+
+  // Auto image fetch on name change
+  document.getElementById('edit-name').oninput = async function() {
+    const query = this.value.trim();
+    if (query.length < 3) return;
+    preview.innerHTML = '<small>Searching image...</small>';
+    const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.google.com/search?q=' + encodeURIComponent(query + ' fresh produce') + '&tbm=isch')}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const html = data.contents;
+      const match = html.match(/<img[^>]+src="([^">]+)"/);
+      if (match && match[1].startsWith('https') && !match[1].includes('google')) {
+        preview.innerHTML = `<img src="${match[1]}" class="preview-img shadow">`;
+        preview.dataset.autoImage = match[1];
+      }
+    } catch(e) {}
+  };
+
+  new bootstrap.Modal(document.getElementById('editModal')).show();
+}
+
+async function saveEdit() {
+  const idx = document.getElementById('edit-global-index').value;
+  let allProducts = JSON.parse(localStorage.getItem('allProducts')) || [];
+  let product = allProducts[idx];
+
+  let imageUrl = product.image;
+  const fileInput = document.getElementById('edit-image');
+  const preview = document.getElementById('edit-image-preview');
+
+  if (fileInput.files[0]) {
+    imageUrl = await new Promise(r => {
+      const reader = new FileReader();
+      reader.onload = e => r(e.target.result);
+      reader.readAsDataURL(fileInput.files[0]);
+    });
+  } else if (preview.dataset.autoImage) {
+    imageUrl = preview.dataset.autoImage;
+  }
+
+  product.name = document.getElementById('edit-name').value.trim();
+  product.category = document.getElementById('edit-category').value;
+  product.price = document.getElementById('edit-price').value.trim();
+  product.description = document.getElementById('edit-description').value.trim();
+  product.location = document.getElementById('edit-location').value.trim();
+  product.image = imageUrl;
+
+  localStorage.setItem('allProducts', JSON.stringify(allProducts));
+  bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+  alert("Product updated successfully!");
+  loadProducts();
+}
+
+window.onload = loadProducts;
+</script>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,ta,kn,ml,hi,te'
+  }, 'google_translate_element');
+}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

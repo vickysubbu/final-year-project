@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm Direct Connect</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root {
+  --green-main: #28a745;
+  --accent-purple: #6f42c1;
+  --bg-gradient: linear-gradient(to bottom, #e8f5e9, #ffeaa7, #fd79a8);
+}
+.goog-logo-link, .goog-te-gadget span { display: none !important; }
+.goog-te-gadget { color: transparent !important; }
+.goog-te-banner-frame.skiptranslate { display: none !important; }
+body { top: 0 !important; background: var(--bg-gradient); min-height: 100vh; animation: gradient-bg 15s ease infinite; background-size: 400% 400%; }
+@keyframes gradient-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero-header { background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://thumbs.dreamstime.com/b/vibrant-farmers-market-stall-fresh-organic-produce-colorful-abundant-display-fresh-organic-produce-local-399628245.jpg') center/cover; padding: 140px 20px; }
+.hero-header h1 { font-size: 4rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.navbar { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.login-btn { background: linear-gradient(135deg, #ff6a00, #ee0979); transition: transform 0.3s; }
+.login-btn:hover { transform: scale(1.05); }
+
+/* Medium-sized product cards */
+.product-card {
+  border-radius: 18px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); transition: transform 0.3s, box-shadow 0.3s; height: 100%;
+}
+.product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+.product-card img {
+  height: 300px; /* Medium size */
+  object-fit: cover; border-top-left-radius: 18px; border-top-right-radius: 18px; transition: transform 0.5s;
+}
+.product-card:hover img { transform: scale(1.05); }
+.card-body { padding: 1.8rem; }
+.price { font-size: 1.6rem; font-weight: bold; color: var(--green-main); }
+.location { font-size: 1rem; }
+
+/* Grid: 3 columns on lg, 2 on md, 1 on sm */
+#newest-products .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+@media (max-width: 768px) {
+  .product-card img { height: 250px; }
+  .hero-header h1 { font-size: 2.8rem; }
+}
+</style>
+</head>
+<body class="d-flex flex-column">
+
+<!-- Navbar and Hero same as before -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-success" href="index.html">
+      <i class="bi bi-tree-fill me-2"></i>Farm Direct Connect
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="vegetables.html">Vegetables</a></li>
+        <li class="nav-item"><a class="nav-link" href="gram.html">Gram Sahayak</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item me-3">
+          <select class="lang-select form-select" id="language">
+            <option value="">🌐 Language</option>
+            <option value="en">English</option>
+            <option value="ta">Tamil</option>
+            <option value="ml">Malayalam</option>
+            <option value="hi">Hindi</option>
+            <option value="kn">Kannada</option>
+            <option value="te">Telugu</option>
+          </select>
+        </li>
+        <li class="nav-item">
+          <a href="login.html" class="login-btn btn text-white">Login</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="hero-header text-white text-center">
+  <div class="container">
+    <h1>Farm Direct Connect</h1>
+    <p class="lead">Fresh Produce Directly from Farmers to Your Table – No Middlemen, Better Prices</p>
+  </div>
+</header>
+
+<section class="container my-5 py-5" id="newest-products">
+  <h2 class="text-center mb-5 text-primary fw-bold">Newest Fresh Products</h2>
+  <div class="row g-4">
+
+    <!-- Fresh Tomatoes -->
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="https://cafarmtrust.org/wp-content/uploads/2019/03/tomatoes1.jpg" alt="Fresh Red Tomatoes from Farm" class="card-img-top">
+        <div class="card-body d-flex flex-column text-center">
+          <h5 class="card-title fw-bold">Fresh Tomatoes</h5>
+          <p class="price">₹20/kg</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> Location: Kerala</p>
+          <a href="#" class="btn btn-success mt-auto">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fresh Bananas -->
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="https://m.media-amazon.com/images/I/414eAsDCbxL._AC_UF894,1000_QL80_.jpg" alt="Fresh Organic Bananas Bunch" class="card-img-top">
+        <div class="card-body d-flex flex-column text-center">
+          <h5 class="card-title fw-bold">Fresh Bananas</h5>
+          <p class="price">₹60/dozen</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> Location: Tamil Nadu</p>
+          <a href="#" class="btn btn-success mt-auto">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Basmati Rice -->
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="rice.jpg" alt="Premium Basmati Rice Grains" class="card-img-top">
+        <div class="card-body d-flex flex-column text-center">
+          <h5 class="card-title fw-bold">Basmati Rice</h5>
+          <p class="price">₹80/kg</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> Location: Punjab</p>
+          <a href="#" class="btn btn-success mt-auto">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fresh Carrots -->
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="https://cdn11.bigcommerce.com/s-bwh58phqub/images/stencil/1280x1280/products/1448/1525/BTKA_17030040599501874_c852b6f5013b6fb64c4044e76a143d__69173.1704239162.jpg?c=1" alt="Fresh Organic Carrots Bunch" class="card-img-top">
+        <div class="card-body d-flex flex-column text-center">
+          <h5 class="card-title fw-bold">Fresh Carrots</h5>
+          <p class="price">₹30/kg</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> Location: Uttar Pradesh</p>
+          <a href="#" class="btn btn-success mt-auto">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fresh Spinach -->
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="https://i0.wp.com/post.healthline.com/wp-content/uploads/2019/05/spinach-1296x728-header.jpg?w=1155&h=1528" alt="Fresh Green Spinach Leaves" class="card-img-top">
+        <div class="card-body d-flex flex-column text-center">
+          <h5 class="card-title fw-bold">Fresh Spinach</h5>
+          <p class="price">₹20/bunch</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> Location: Maharashtra</p>
+          <a href="#" class="btn btn-success mt-auto">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fresh Broccoli -->
+    <div class="col">
+      <div class="card product-card h-100">
+        <img src="https://static.vecteezy.com/system/resources/previews/060/517/766/large_2x/whole-fresh-broccoli-head-on-white-background-healthy-green-vegetable-rich-in-nutrients-and-ideal-for-cooking-or-raw-consumption-photo.jpg" alt="Fresh Broccoli Head" class="card-img-top">
+        <div class="card-body d-flex flex-column text-center">
+          <h5 class="card-title fw-bold">Fresh Broccoli</h5>
+          <p class="price">₹50/kg</p>
+          <p class="location"><i class="bi bi-geo-alt-fill"></i> Location: Himachal</p>
+          <a href="#" class="btn btn-success mt-auto">View Details</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Google Translate and Footer same as before -->
+<div id="google_translate_element" style="display:none;"></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    { pageLanguage: 'en', includedLanguages: 'en,ta,ml,hi,kn,te', autoDisplay: false },
+    'google_translate_element'
+  );
+}
+
+document.getElementById("language").addEventListener("change", function () {
+  const lang = this.value;
+  if (!lang) return;
+
+  const interval = setInterval(() => {
+    const select = document.querySelector(".goog-te-combo");
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event("change"));
+      clearInterval(interval);
+    }
+  }, 200);
+});
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<footer class="bg-dark text-white text-center py-4 mt-auto">
+  <div class="container">
+    <p class="mb-0">© 2025 Farm Direct Connect | Connecting Farmers Directly to Consumers</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b46bb8e1a33b293',t:'MTc2NjgxNjY0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
