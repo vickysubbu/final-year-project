@@ -130,17 +130,34 @@ async function loadProduct() {
 function openPayment() {
   if (!currentProduct) return;
 
-  const amountInRupees = parseFloat(currentProduct.price.replace(/[^\d.]/g, '')) || 100;
+  // Extract price properly (removes ₹, /kg, etc.)
+  let basePrice = parseFloat(currentProduct.price.replace(/[^\d.]/g, '')) || 100;
+
+  // Show a prompt so user can edit the amount (default = actual product price)
+  let amountInRupees = prompt("Enter the amount to pay (in ₹):", basePrice);
+
+  // If user cancels the prompt, stop
+  if (amountInRupees === null) return;
+
+  amountInRupees = parseFloat(amountInRupees);
+
+  // Validation
+  if (!amountInRupees || amountInRupees <= 0) {
+    alert("Please enter a valid amount greater than 0");
+    return;
+  }
+
   const amountInPaise = Math.round(amountInRupees * 100);
 
   const options = {
-    key: "rzp_test_1DP5mmOlF5G5ag",
+    key: "rzp_test_SbfXwPkYLqZxXB",   // ← Use your correct test key
     amount: amountInPaise,
     currency: "INR",
     name: "Farm Direct Connect",
     description: `Purchase: ${currentProduct.name}`,
     handler: function (response) {
-      alert(`Payment Successful! 🎉\nPayment ID: ${response.razorpay_payment_id}`);
+      alert(`✅ Payment Successful!\nPayment ID: ${response.razorpay_payment_id}\nAmount: ₹${amountInRupees}`);
+      // You can later send this to backend to mark order as paid
     },
     prefill: {
       name: localStorage.getItem('username') || "Customer",
@@ -148,7 +165,9 @@ function openPayment() {
       email: "customer@example.com"
     },
     theme: { color: "#28a745" },
-    modal: { ondismiss: () => alert("Payment cancelled") }
+    modal: { 
+      ondismiss: () => console.log("Payment modal closed by user") 
+    }
   };
 
   const rzp = new Razorpay(options);
